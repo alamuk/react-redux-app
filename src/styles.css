@@ -60,3 +60,14 @@ h3 {
 .text-color{
   font-size: large;
 }
+
+
+
+.list {;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin-left: auto;
+  margin-right: auto;
+}

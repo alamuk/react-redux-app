@@ -203,6 +203,18 @@ Action creator = actions
 - and `inside` the `method` we will put `payload value` as `argument`
 - songsSlice.action.addSong('Some Songs added')
   `console.log(songSlice.actions.addSong('Some song added'));`
+- actions object is whole slice of that. 
+`{ name: 'song',
+  initialState: [],
+  reducers: {
+  addSong: (state, action) => {
+  state.push(action.payload);
+  },
+  removeSong: (state, action) => {},
+} }`
+
+we can export from here by
+`export const { addSong } = songSlice.actions;`
 
 #### e - connecting redux store and react
 -----------------------------------------
@@ -218,14 +230,77 @@ steps of connecting react to redux: need to once per project.
 4. `wrap` the `App` component with the `Provider` and `pass` the `store` into the `Provider` in the = `index.js`/or/ `main.js` file
 
 
+### How to add item in redux store:
+
+event and event handler function.
+
+### 6 steps to change the state:  
+-------------------------------
+1. Add a `reducer` to one of the `slices` that changes the state in some particular way. 
+2. Export the `action creator` - `actions` that slice automatically creates
+   `export const { addSong } = songSlice.actions;`
+3. Find the `component` that we want to `dispatch from` 
+4. Import the `action creator function` and `useDispatch` from `react-redux`
+`import { useDispatch } from 'react-redux';
+ import { addSong } from '../store/index.js';
+` // use this in the function
+5. Call the `'useDispatch'` hook to get access to the dispatch function.
+ ` const dispatch = useDispatch();`
+6. When the user does something, call the `action creator= actions` to get an action, then dispatch it. 
+//`const action = addSong(song);
+// dispatch(action);`
+we will write this way: 
+`dispatch(addSong(song))`
+use this in the event handler function. 
+
+
+### How to access to the state with this data: 
+----------------------------------------------
+1. find the component that needs to access some state 
+2. Import the `useSelector` hook from `react-redux`
+   `import { useSelector } from 'react-redux';`
+3. Call the hook, passing in a selector function
+`const songPlaylist = [];`
+we want to put our changes on this array. 
+we are going to `replace` the `empty array` with `useSelection` hook. 
+we will pass a callback() function as an argument.
+in the callback() we will pass the `whole state` in the store for this slice `state`. 
+from here we will `return` `part of the state that component care about` 
+example: 
+from song Component: 
+`
+const songPlaylist = useSlector((state)=> {
+return state.songs   
+})
+`
+state.keyName in the store reducer.  `return state.songs`
+
+4. Use the state! Anytime state changes, the component will automatically render.  
 
 
 
-Debug purpose:
+### state confusion:
+--------------------
+#### inside the slice: reducer: 
+- `state` means only the array on that state.
+- like for songSlice --- 
+- song: [`state`] array inside just that array space for it.
+- console.log(state.length); to check this. 
+
+#### outside the slice: 
+-`state` means whole redux store `state`. entire redux store. 
+
+
+### crucial important part of that: 
+1. Accessing State 
+2. changing the State 
+
+
+Debugging purpose:
+// 
 // console.log(JSON.stringify(store.getState()));
 // const startingState = store.getState();
 // console.log(JSON.stringify(startingState));
-// console.log(JSON.stringify(store.getState()));
 // console.log(songSlice.actions.addSong());
 // console.log(songSlice.actions.addSong('Some song added'));
 // store.dispatch(songSlice.actions.addSong('hello song'));
