@@ -286,6 +286,7 @@ state.keyName in the store reducer.  `return state.songs`
 - like for songSlice --- 
 - song: [`state`] array inside just that array space for it.
 - console.log(state.length); to check this. 
+- `this state` manage, control, and produce by this slice. 
 
 #### outside the slice: 
 -`state` means whole redux store `state`. entire redux store. 
@@ -296,6 +297,108 @@ state.keyName in the store reducer.  `return state.songs`
 2. changing the State 
 
 
+
+# Add or Remove an Item: form the array state: 
+------------
+- slice needs to register in store reducer. 
+- ----------------------------------------------
+
+- FOR ANY FUNCTION - add  `A function` inside the `slice reducers`
+- function will have `state and action` as an argument. both are `object` two different object. 
+- `action` has two properties—`payload and type` 
+- `type` will be determined by `action creator/actions` and payload will be from `dispatch function`. 
+- need to pass `action.payload` any function we are using like 'state.push(action.payload)'
+
+
+```
+- for add fuction - we will use - push METHOD like- 'state.push(action.payload)'
+- for remove method - we will use - state.splice(state.indexOf(action.payload), 1);
+```
+---------------------------------------
+-  export the `action boject creator function ` with the actions = action creator which will create action creator function. 
+- `export const { object fuction creator Name } = sliceName.actions;`
+-  crucial: -we need to-includes `actions` with the `sliceName` because it will create `action boject` creator function.
+
+- ------------------------------------------
+
+- import it that component where needed. 
+- import useDispatch and useSelector hook
+
+
+- add `event handler` function for Adding or Deleting an item: and pass the `item name` which will be added. 
+- use dispatch() function where pass the imported `added or deleted function` as an argument 
+- in the `function` pass the `item` as an argument which will be `added or deleted`
+
+------------------------------------------------
+
+- For the array = the `key` where this all the `items` will go `const MovieListItem = Value`
+- For value, use `useSelector()`  inside as an argument will be a callback function. 
+- where will pass the `state` `which is the whole state in the store` as an argument 
+- and return it with `key` for this slice in the store. e.g. `return state.movies` 
+- state here is the whole state in the store. which includes `movies` slices and other slices inside the reducer.
+
+
+-----------------------------------------------
+
+### Delete an Item:
+- when we call the function, we need to know what `item` we are supposed to remove.
+- we are going to make a big assumption here: -
+- we are going to assume that the `action object` on its `payload property` will be a `string` which we are going to remove. it will be the title of the song
+- `dispatch fuction` will receive the actions creator function with payload the item which will be removed. 
+
+```javascript
+
+  removeSong: (state, action) => {
+      const index = state.indexOf(action.payload);
+      state.splice(index, 1); // splice take two arguments - index of the item, and how many will be removed.
+      // state.splice(state.indexOf(action.payload), 1);
+      
+      
+      // action.payload === string, the song we want to remove.
+      // state will be an Array of the song
+      // we need to go through the Array `means-state`, find the appropriate item and remove it.
+      // remove an item out of an array - when we are using `immer`,
+      // redux tool kit automatically includes `immer` inside all of our `reducer` functions -
+      // we are directly allowed / absolutely allowed to `mutate` the state object. so it is easier to with immer.
+      // and can be done easily with splice() function
+
+     
+    }
+```
+
+
+Example: 
+
+```javascript 
+
+addMovie: (state, action) => {
+    state.push(action.payload);
+}
+ 
+export const {addMovie} = movieSlice.actions;
+
+// -------------------------
+const dispatch = useDispatch();
+
+const moviePlaylist = useSelector((state) => {
+    return state.movies;
+});
+
+const handleMovieAdd = (movie) => {
+    dispatch(addMovie(movie));
+};
+const handleMovieRemove = (movie) => {
+    dispatch(removeMovie(movie));
+};
+
+```
+-----------------------------------------
+
+
+
+
+
+
 Debugging purpose:
 // 
 // console.log(JSON.stringify(store.getState()));
@@ -304,3 +407,9 @@ Debugging purpose:
 // console.log(songSlice.actions.addSong());
 // console.log(songSlice.actions.addSong('Some song added'));
 // store.dispatch(songSlice.actions.addSong('hello song'));
+
+
+
+------------------------------------------------
+# reset 
+--------
